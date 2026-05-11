@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SkillUp</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080f;--s1:#111118;--s2:#18181f;--s3:#22222c;--s4:#2a2a36;
+  --bd:#ffffff14;--bd2:#ffffff24;--bd3:#ffffff38;
+  --tx:#eeeef8;--m1:#9090a8;--m2:#55556a;
+  --ac:#6c63ff;--ac2:#ff5f9e;--ac3:#3ecf8e;--ac4:#f5a623;--ac5:#38bdf8;
+  --r:12px;--r2:18px;
+}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.logo{font-family:'Syne',sans-serif}
+
+.app{max-width:680px;margin:0 auto;padding:0 14px 60px}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px;position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:0.5px solid var(--bd)}
+.logo{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.logo span{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tabs{display:flex;gap:2px;background:var(--s2);padding:3px;border-radius:10px;border:0.5px solid var(--bd)}
+.tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--m1);transition:all .18s;font-family:'DM Sans',sans-serif}
+.tab.on{background:var(--s3);color:var(--tx)}
+
+.view{display:none}.view.on{display:block}
+
+/* EXPLORE */
+.hero{padding:32px 0 24px;text-align:center}
+.hero h1{font-size:34px;font-weight:800;line-height:1.1;letter-spacing:-1px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--m1);margin-top:10px;font-size:15px}
+
+.search-box{position:relative;margin-bottom:16px}
+.search-box input{width:100%;padding:14px 50px 14px 18px;background:var(--s2);border:1px solid var(--bd2);border-radius:var(--r);color:var(--tx);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
+.search-box input:focus{border-color:var(--ac)}
+.search-box input::placeholder{color:var(--m2)}
+.search-box .go{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--ac);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.search-box .go:hover{opacity:.8}
+
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none}
+.cat-scroll::-webkit-scrollbar{display:none}
+.catbtn{flex-shrink:0;padding:7px 14px;border-radius:50px;background:var(--s2);border:0.5px solid var(--bd);font-size:13px;cursor:pointer;color:var(--m1);transition:all .18s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.catbtn:hover,.catbtn.sel{background:var(--s3);border-color:var(--ac);color:var(--tx)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px;margin-top:4px}
+.scard{background:var(--s2);border:0.5px solid var(--bd);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden}
+.scard:hover{border-color:var(--ac);background:var(--s3);transform:translateY(-2px)}
+.scard .ico{font-size:26px;margin-bottom:8px}
+.scard h3{font-size:14px;font-weight:600;margin-bottom:4px;line-height:1.3}
+.scard p{font-size:11px;color:var(--m1);line-height:1.45}
+.scard .dif{display:inline-block;font-size:10px;padding:2px 8px;border-radius:50px;margin-top:8px;font-weight:600}
+.db{background:#6c63ff22;color:#9b94ff}.di{background:#f5a62322;color:#f5c370}.da{background:#ff3c5522;color:#ff7090}
+.cur-badge{position:absolute;top:8px;right:8px;background:var(--ac3);color:#000;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px}
+
+.sec-lbl{font-size:11px;color:var(--m2);letter-spacing:.8px;text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.spin-wrap{display:flex;align-items:center;gap:8px;color:var(--m1);font-size:13px;padding:24px 0}
+.spin{width:16px;height:16px;border:2px solid var(--bd2);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TODAY */
+.streak-row{display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:0.5px solid var(--bd);border-radius:var(--r);padding:14px 18px;margin:14px 0}
+.sf{font-size:28px}
+.sn{font-family:'Syne',sans-serif;font-size:26px;font-weight:800}
+.sl{font-size:11px;color:var(--m1)}
+.dots{display:flex;gap:5px}
+.dot{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:0.5px solid var(--bd)}
+.dot.ok{background:var(--ac);border-color:var(--ac);color:#fff}
+.dot.now{background:transparent;border-color:var(--ac);color:var(--ac)}
+.dot.no{color:var(--m2)}
+
+.sbanner{background:var(--s2);border:0.5px solid var(--bd);border-radius:var(--r2);padding:18px;margin-bottom:16px}
+.smeta{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.si2{font-size:22px}
+.sname{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.ssub{font-size:12px;color:var(--m1)}
+.pbar-wrap{margin-top:2px}
+.pbar-top{display:flex;justify-content:space-between;font-size:11px;color:var(--m1);margin-bottom:5px}
+.pbar{height:5px;border-radius:50px;background:var(--s4)}
+.pfill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .6s ease}
+
+.tip-box{background:var(--s2);border:0.5px solid var(--bd2);border-radius:var(--r2);padding:24px;margin-bottom:16px}
+.tip-lbl{font-size:10px;color:var(--ac);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.tip-h{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.25}
+.tip-b{font-size:14px;line-height:1.75;color:var(--m1)}
+.tip-acts{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.btn{padding:10px 18px;border-radius:var(--r);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all .18s}
+.btn-p{background:var(--ac);color:#fff}.btn-p:hover{opacity:.85}
+.btn-g{background:var(--s3);color:var(--tx);border:0.5px solid var(--bd2)}.btn-g:hover{border-color:var(--ac);color:var(--ac)}
+.btn-d{background:#ff3c5516;color:#ff7090;border:0.5px solid #ff3c5530}.btn-d:hover{background:#ff3c5528}
+.done-note{display:flex;align-items:center;gap:8px;background:#3ecf8e18;border:0.5px solid #3ecf8e40;border-radius:var(--r);padding:12px 16px;color:var(--ac3);font-size:13px;margin-top:12px}
+
+.mastery-cta{background:linear-gradient(135deg,#6c63ff18,#ff5f9e18);border:1px solid var(--ac);border-radius:var(--r2);padding:22px;text-align:center;margin-bottom:16px}
+.mastery-cta h3{font-family:'Syne',sans-serif;font-size:18px;margin-bottom:6px}
+.mastery-cta p{font-size:13px;color:var(--m1);margin-bottom:16px}
+
+.empty{text-align:center;padding:48px 16px;color:var(--m1)}
+.empty-ico{font-size:38px;margin-bottom:12px}
+
+/* PROFILE */
+.prof-head{background:var(--s2);border:0.5px solid var(--bd);border-radius:var(--r2);padding:24px;text-align:center;margin:14px 0 16px}
+.av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+.pname{font-family:'Syne',sans-serif;font-size:20px;font-weight:700}
+.psince{font-size:12px;color:var(--m1);margin-top:3px}
+.pbadge{display:inline-flex;align-items:center;gap:5px;background:#f5a62322;border:0.5px solid #f5a62340;color:var(--ac4);padding:4px 12px;border-radius:50px;font-size:11px;font-weight:600;margin-top:8px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.sbox{background:var(--s2);border:0.5px solid var(--bd);border-radius:var(--r);padding:12px;text-align:center}
+.sv{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
+.slb{font-size:11px;color:var(--m1);margin-top:2px}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:20px}
+.bitem{background:var(--s2);border:0.5px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center}
+.bitem.lk{opacity:.3}
+.bico{font-size:28px;margin-bottom:6px}
+.bname{font-size:11px;font-weight:600;font-family:'Syne',sans-serif;line-height:1.3}
+.bsub{font-size:10px;color:var(--m1);margin-top:2px}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s3);border:0.5px solid var(--bd2);color:var(--tx);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0)}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fi .3s ease forwards}
+</style>
+</head>
+<body>
+<div class="app">
+<nav>
+  <div class="logo">skill<span>up</span></div>
+  <div class="tabs">
+    <button class="tab on" onclick="go('today')">Today</button>
+    <button class="tab" onclick="go('explore')">Explore</button>
+    <button class="tab" onclick="go('profile')">Profile</button>
+  </div>
+</nav>
+
+<div id="v-today" class="view on"></div>
+<div id="v-explore" class="view">
+  <div class="hero">
+    <h1>Master <em>anything</em>.<br>One tip a day.</h1>
+    <p>Search any skill or browse 500+ categories below.</p>
+  </div>
+  <div class="search-box">
+    <input id="sq" type="text" placeholder="e.g. chess, guitar, Python, swimming, investing…" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="go" onclick="doSearch()"><i class="ti ti-search"></i></button>
+  </div>
+  <div class="cat-scroll" id="cats"></div>
+  <div id="res"></div>
+</div>
+<div id="v-profile" class="view"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SKILLS_DB = {
+  "⚽ Soccer / Football":[ {n:"Dribbling",i:"⚽",d:"Ball control at speed through defenders",x:"Beginner"}, {n:"Shooting technique",i:"🥅",d:"Strike the ball with power and accuracy",x:"Intermediate"}, {n:"Positioning & movement",i:"🧭",d:"Read the game and find space intelligently",x:"Intermediate"}, {n:"Passing & vision",i:"👁️",d:"Play quick, accurate passes and unlock defenses",x:"Intermediate"}, {n:"Defending 1v1",i:"🛡️",d:"Win duels and stay goalside of attackers",x:"Beginner"}, {n:"Set pieces",i:"🎯",d:"Corners, free kicks and penalty technique",x:"Advanced"} ],
+  "🏀 Basketball":[ {n:"Ball handling",i:"🏀",d:"Dribble with both hands under pressure",x:"Beginner"}, {n:"Jump shot mechanics",i:"🎯",d:"Build a consistent, repeatable shot form",x:"Beginner"}, {n:"Post moves",i:"💪",d:"Score from the low and mid post",x:"Advanced"}, {n:"Pick & roll offense",i:"🔄",d:"Execute and read pick & roll situations",x:"Intermediate"}, {n:"Defensive footwork",i:"👟",d:"Stay in front of any ball handler",x:"Beginner"}, {n:"Court vision",i:"👀",d:"See the whole floor and find open teammates",x:"Advanced"} ],
+  "🎮 Esports & Gaming":[ {n:"FPS aim training",i:"🎯",d:"Improve mouse aim, tracking and flicks",x:"Beginner"}, {n:"MOBA macro play",i:"🗺️",d:"Master map awareness and objective control",x:"Advanced"}, {n:"Fighting game fundamentals",i:"🥊",d:"Learn neutral, combos and mixups",x:"Intermediate"}, {n:"Strategy game openings",i:"♟️",d:"Learn solid early-game builds and openers",x:"Beginner"}, {n:"Streaming & content",i:"📺",d:"Build an audience around your gameplay",x:"Intermediate"}, {n:"Mental game & tilt control",i:"🧠",d:"Stay calm and consistent under pressure",x:"Intermediate"} ],
+  "🎾 Racket Sports":[ {n:"Tennis forehand",i:"🎾",d:"Hit a heavy, consistent topspin forehand",x:"Beginner"}, {n:"Pickleball dinking",i:"🏓",d:"Master the soft game at the kitchen line",x:"Beginner"}, {n:"Badminton footwork",i:"🏸",d:"Cover the court efficiently and recover fast",x:"Intermediate"}, {n:"Table tennis spin",i:"🏓",d:"Generate and read topspin & backspin shots",x:"Intermediate"}, {n:"Squash court movement",i:"🟩",d:"Move to the T and stay efficient all rally",x:"Intermediate"}, {n:"Serve mechanics",i:"🎯",d:"Develop a consistent first and second serve",x:"Advanced"} ],
+  "🏊 Swimming & Water":[ {n:"Freestyle technique",i:"🏊",d:"Improve stroke efficiency and body position",x:"Beginner"}, {n:"Open water swimming",i:"🌊",d:"Navigate and pace in open water safely",x:"Intermediate"}, {n:"Butterfly stroke",i:"🦋",d:"Learn the hardest but most powerful stroke",x:"Advanced"}, {n:"Flip turns",i:"🔄",d:"Execute fast, efficient turns off the wall",x:"Intermediate"}, {n:"Triathlon pacing",i:"⏱️",d:"Manage energy across swim, bike and run",x:"Advanced"}, {n:"Surf paddling",i:"🏄",d:"Build paddle strength and timing to catch waves",x:"Beginner"} ],
+  "🏋️ Fitness & Strength":[ {n:"Deadlift form",i:"🏋️",d:"Pull heavy with a safe, powerful technique",x:"Beginner"}, {n:"Olympic weightlifting",i:"⚡",d:"Learn the snatch and clean & jerk",x:"Advanced"}, {n:"Calisthenics basics",i:"💪",d:"Build strength with push-ups, pulls and dips",x:"Beginner"}, {n:"Running form",i:"🏃",d:"Run more efficiently and reduce injury risk",x:"Beginner"}, {n:"Mobility & flexibility",i:"🧘",d:"Increase range of motion and reduce tension",x:"Beginner"}, {n:"HIIT programming",i:"🔥",d:"Design effective high-intensity interval sessions",x:"Intermediate"} ],
+  "🥋 Combat Sports":[ {n:"Boxing stance & guard",i:"🥊",d:"Build a solid defensive and offensive base",x:"Beginner"}, {n:"Brazilian Jiu-Jitsu guard",i:"🤼",d:"Control and submit opponents from your back",x:"Intermediate"}, {n:"Wrestling takedowns",i:"🤼",d:"Shoot for and finish double & single legs",x:"Intermediate"}, {n:"Muay Thai kicks",i:"🦵",d:"Throw power roundhouse and teep kicks",x:"Beginner"}, {n:"Judo throws",i:"🥋",d:"Off-balance and throw opponents cleanly",x:"Intermediate"}, {n:"MMA clinch work",i:"💪",d:"Control the clinch, land knees and break away",x:"Advanced"} ],
+  "🎵 Music":[ {n:"Guitar chord transitions",i:"🎸",d:"Switch smoothly between open chords",x:"Beginner"}, {n:"Music theory basics",i:"🎼",d:"Understand scales, chords and progressions",x:"Beginner"}, {n:"Beat making & production",i:"🎧",d:"Produce beats in a DAW from scratch",x:"Intermediate"}, {n:"Vocal technique",i:"🎤",d:"Develop breath control, tone and range",x:"Beginner"}, {n:"Piano improvisation",i:"🎹",d:"Play freely over chord changes",x:"Advanced"}, {n:"Mixing & mastering",i:"🎚️",d:"Make your tracks sound polished and loud",x:"Advanced"} ],
+  "💻 Programming":[ {n:"Python fundamentals",i:"🐍",d:"Write clean Python for automation and data",x:"Beginner"}, {n:"React frontend dev",i:"⚛️",d:"Build dynamic UIs with React and hooks",x:"Intermediate"}, {n:"Data structures & algos",i:"📊",d:"Solve coding problems and ace interviews",x:"Intermediate"}, {n:"Machine learning basics",i:"🤖",d:"Train and evaluate your first ML models",x:"Intermediate"}, {n:"System design",i:"🏗️",d:"Design scalable distributed systems",x:"Advanced"}, {n:"DevOps & CI/CD",i:"🔧",d:"Automate deployments and manage infrastructure",x:"Advanced"} ],
+  "🍳 Cooking":[ {n:"Knife skills",i:"🔪",d:"Chop, dice and julienne safely and quickly",x:"Beginner"}, {n:"French mother sauces",i:"🫕",d:"Master béchamel, velouté, hollandaise and more",x:"Intermediate"}, {n:"Baking bread",i:"🍞",d:"Make perfect sourdough and enriched doughs",x:"Intermediate"}, {n:"Meal prep & planning",i:"📋",d:"Cook efficiently for the whole week",x:"Beginner"}, {n:"Fermentation",i:"🫙",d:"Make kimchi, kombucha and fermented foods",x:"Intermediate"}, {n:"Plating & presentation",i:"🍽️",d:"Make your dishes look restaurant-quality",x:"Advanced"} ],
+  "🎨 Art & Design":[ {n:"Figure drawing",i:"✏️",d:"Draw the human body with proportion and gesture",x:"Beginner"}, {n:"Digital illustration",i:"🖌️",d:"Create polished art in Procreate or Photoshop",x:"Intermediate"}, {n:"Color theory",i:"🎨",d:"Use color harmoniously and with intention",x:"Beginner"}, {n:"Typography design",i:"🔤",d:"Choose and pair fonts like a designer",x:"Intermediate"}, {n:"3D modeling",i:"📦",d:"Model objects and environments in Blender",x:"Intermediate"}, {n:"UI/UX design",i:"📱",d:"Design beautiful, usable digital interfaces",x:"Intermediate"} ],
+  "📷 Photography & Video":[ {n:"Exposure triangle",i:"📷",d:"Master aperture, shutter speed and ISO",x:"Beginner"}, {n:"Portrait lighting",i:"💡",d:"Use natural and studio light for portraits",x:"Intermediate"}, {n:"Video editing",i:"🎬",d:"Edit footage into compelling stories",x:"Intermediate"}, {n:"Street photography",i:"🌆",d:"Capture candid moments in public spaces",x:"Intermediate"}, {n:"Drone flying & filming",i:"🚁",d:"Fly safely and capture cinematic footage",x:"Beginner"}, {n:"Color grading",i:"🎨",d:"Give your footage a professional color look",x:"Advanced"} ],
+  "🧠 Mental Skills":[ {n:"Speed reading",i:"📖",d:"Double your reading speed while retaining more",x:"Beginner"}, {n:"Memory techniques",i:"🧩",d:"Use memory palaces and spaced repetition",x:"Beginner"}, {n:"Meditation",i:"🧘",d:"Build a consistent mindfulness practice",x:"Beginner"}, {n:"Public speaking",i:"🎤",d:"Deliver confident, compelling presentations",x:"Intermediate"}, {n:"Critical thinking",i:"🔍",d:"Identify logical fallacies and reason clearly",x:"Intermediate"}, {n:"Lucid dreaming",i:"💤",d:"Become conscious and in control while dreaming",x:"Advanced"} ],
+  "💰 Finance & Investing":[ {n:"Stock market basics",i:"📈",d:"Understand equities, ETFs and market mechanics",x:"Beginner"}, {n:"Options trading",i:"⚡",d:"Use calls and puts to generate income or hedge",x:"Advanced"}, {n:"Personal budgeting",i:"💵",d:"Track spending and build a savings plan",x:"Beginner"}, {n:"Real estate investing",i:"🏠",d:"Analyze deals and buy your first rental property",x:"Intermediate"}, {n:"Crypto & Web3",i:"₿",d:"Understand blockchain, DeFi and NFTs",x:"Intermediate"}, {n:"Tax optimization",i:"🧾",d:"Legally reduce your tax burden every year",x:"Advanced"} ],
+  "🌍 Languages":[ {n:"Spanish basics",i:"🇪🇸",d:"Build conversational Spanish from zero",x:"Beginner"}, {n:"Japanese Hiragana",i:"🇯🇵",d:"Read and write all 46 Hiragana characters",x:"Beginner"}, {n:"Mandarin tones",i:"🇨🇳",d:"Master the 4 tones to be understood clearly",x:"Beginner"}, {n:"French pronunciation",i:"🇫🇷",d:"Sound natural with French sounds and liaison",x:"Intermediate"}, {n:"Language immersion",i:"🎧",d:"Use media and input methods to accelerate fluency",x:"Intermediate"}, {n:"Arabic script",i:"🇸🇦",d:"Read and write the Arabic alphabet",x:"Beginner"} ],
+  "🏄 Outdoor & Adventure":[ {n:"Rock climbing technique",i:"🧗",d:"Read routes and move efficiently on the wall",x:"Beginner"}, {n:"Surfing pop-up",i:"🏄",d:"Stand up and ride waves consistently",x:"Beginner"}, {n:"Mountain biking skills",i:"🚵",d:"Handle technical trails with confidence",x:"Intermediate"}, {n:"Wilderness navigation",i:"🧭",d:"Navigate with map and compass off-trail",x:"Intermediate"}, {n:"Backcountry skiing",i:"⛷️",d:"Ski ungroomed terrain safely and efficiently",x:"Advanced"}, {n:"Kayaking",i:"🛶",d:"Paddle efficiently and handle moving water",x:"Beginner"} ],
+  "✍️ Writing":[ {n:"Copywriting",i:"✍️",d:"Write persuasive marketing and sales copy",x:"Beginner"}, {n:"Short story structure",i:"📚",d:"Plot and pace compelling short fiction",x:"Intermediate"}, {n:"Journaling habits",i:"📓",d:"Build a consistent and reflective writing practice",x:"Beginner"}, {n:"Essay writing",i:"📝",d:"Argue clearly with evidence and good structure",x:"Intermediate"}, {n:"Screenwriting",i:"🎬",d:"Format and structure scripts for film and TV",x:"Intermediate"}, {n:"Technical writing",i:"📖",d:"Write clear documentation and guides",x:"Intermediate"} ],
+  "🎭 Performance":[ {n:"Improv comedy",i:"😄",d:"Think fast and say yes-and to your scene partners",x:"Beginner"}, {n:"Stand-up structure",i:"🎤",d:"Write and deliver a tight five-minute set",x:"Intermediate"}, {n:"Hip-hop dance",i:"💃",d:"Learn grooves, isolations and foundational moves",x:"Beginner"}, {n:"Acting for camera",i:"🎥",d:"Be natural and believable in front of a lens",x:"Intermediate"}, {n:"Magic tricks",i:"🪄",d:"Learn sleight of hand and performance technique",x:"Beginner"}, {n:"Breakdancing toprock",i:"🕺",d:"Master the fundamental top-rock footwork",x:"Beginner"} ],
+  "♟️ Board & Mind Games":[ {n:"Chess openings",i:"♟️",d:"Learn solid, principled opening systems",x:"Beginner"}, {n:"Chess endgames",i:"👑",d:"Win and draw from basic endgame positions",x:"Intermediate"}, {n:"Poker hand reading",i:"🃏",d:"Put opponents on ranges and make better decisions",x:"Intermediate"}, {n:"Go / Baduk basics",i:"⬜",d:"Learn the rules, life & death and fuseki",x:"Beginner"}, {n:"Scrabble strategy",i:"🔤",d:"Score big with hooks, bingos and board control",x:"Intermediate"}, {n:"Competitive Rubik's cube",i:"🧩",d:"Learn CFOP and solve under 30 seconds",x:"Intermediate"} ],
+  "🏡 Home & DIY":[ {n:"Basic plumbing",i:"🔧",d:"Fix leaks, unclog drains and replace fittings",x:"Beginner"}, {n:"Woodworking joinery",i:"🪚",d:"Cut clean joints for furniture and boxes",x:"Intermediate"}, {n:"Interior painting",i:"🖌️",d:"Paint walls with clean lines and no drips",x:"Beginner"}, {n:"Electrical basics",i:"⚡",d:"Safely replace outlets, switches and fixtures",x:"Intermediate"}, {n:"Gardening & plants",i:"🌱",d:"Grow healthy plants and maintain a garden",x:"Beginner"}, {n:"Home automation",i:"🏠",d:"Set up smart home devices and automations",x:"Intermediate"} ]
+};
+
+const ALL_CATS = Object.keys(SKILLS_DB);
+
+let ST = {
+  skill:null, streak:0, lastVisit:null, todayDone:false,
+  tips:[], badges:[], prestige:0, dayCount:0, joinDate:null, history:[]
+};
+
+async function loadST() {
+  try { const r = localStorage.getItem('su2_state'); if (r) ST = JSON.parse(r); } catch(e){}
+  if(!ST.joinDate) ST.joinDate = new Date().toISOString();
+  checkStreak();
+  buildCats();
+  showCat(ALL_CATS[2]);
+  renderAll();
+}
+
+async function saveST() {
+  try { localStorage.setItem('su2_state', JSON.stringify(ST)); } catch(e){}
+}
+
+function checkStreak() {
+  const today = tod();
+  if (!ST.lastVisit) return;
+  const diff = Math.floor((new Date(today)-new Date(ST.lastVisit))/86400000);
+  if (diff > 1) { ST.streak=0; ST.todayDone=false; }
+  else if (diff===1) { ST.todayDone=false; }
+}
+
+function tod(){ return new Date().toISOString().split('T')[0]; }
+
+function buildCats(){
+  const el = document.getElementById('cats');
+  ALL_CATS.forEach(c=>{
+    const b = document.createElement('button');
+    b.className='catbtn'; b.textContent=c; b.dataset.cat=c;
+    b.onclick=()=>{ document.querySelectorAll('.catbtn').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); showCat(c); };
+    el.appendChild(b);
+  });
+}
+
+function showCat(cat){
+  const skills = SKILLS_DB[cat]||[];
+  renderGrid(skills, cat.split(' ').slice(1).join(' '));
+}
+
+function doSearch(){
+  const q = document.getElementById('sq').value.trim().toLowerCase();
+  if(!q) return;
+  const results=[];
+  for(const [cat, skills] of Object.entries(SKILLS_DB)){
+    for(const s of skills){
+      if(s.n.toLowerCase().includes(q)||s.d.toLowerCase().includes(q)||cat.toLowerCase().includes(q))
+        results.push({...s, cat});
+    }
+  }
+  document.querySelectorAll('.catbtn').forEach(x=>x.classList.remove('sel'));
+  if(results.length) renderGrid(results, `Results for "${q}"`);
+  else renderGrid([], `No results for "${q}"`);
+}
+
+function renderGrid(skills, label){
+  const el = document.getElementById('res');
+  if(!skills.length){ el.innerHTML=`<div class="sec-lbl">${label}</div><div class="empty"><div class="empty-ico">🔭</div><p>Nothing found — try a different search.</p></div>`; return; }
+  el.innerHTML = `<div class="sec-lbl">${label} — ${skills.length} skills</div><div class="grid">${
+    skills.map(s=>`<div class="scard fi" onclick='pick(${JSON.stringify({n:s.n,i:s.i,d:s.d,x:s.x})})'>
+      ${ST.skill&&ST.skill.n===s.n?'<span class="cur-badge">Current</span>':''}
+      <div class="ico">${s.i}</div>
+      <h3>${s.n}</h3><p>${s.d}</p>
+      <span class="dif d${s.x==='Beginner'?'b':s.x==='Intermediate'?'i':'a'}">${s.x}</span>
+    </div>`).join('')
+  }</div>`;
+}
+
+function pick(skill){
+  if(ST.skill && ST.skill.n===skill.n){ toast('Already on this skill!'); return; }
+  if(ST.skill && ST.skill.n!==skill.n){
+    if(!confirm(`Switch from "${ST.skill.n}" to "${skill.n}"?\nYour current progress will reset.`)) return;
+  }
+  ST.skill=skill; ST.tips=[]; ST.dayCount=0; ST.todayDone=false; ST.lastVisit=null;
+  saveST(); toast(`🎯 Started: ${skill.n}`); go('today'); renderToday(); fetchTip();
+}
+
+// --- TIPS ENGINE (built-in fallback tips per skill type) ---
+const TIP_TEMPLATES = [
+  (s,d)=>({t:`Start with the basics of ${s}`,b:`Every expert was once a beginner. Today, spend 15 focused minutes on the most fundamental aspect of ${s}. Don't skip ahead — mastering the foundation makes everything else easier.`}),
+  (s,d)=>({t:`The 80/20 rule for ${s}`,b:`Identify the 20% of techniques that give 80% of results in ${s}. Focus your practice there first. Efficient learning beats grinding the wrong things.`}),
+  (s,d)=>({t:`Record yourself practicing ${s}`,b:`Video or audio yourself while practicing ${s}. You'll instantly spot mistakes you can't feel in the moment. Review with a critical eye and pick one thing to fix.`}),
+  (s,d)=>({t:`Deliberate practice session`,b:`Don't just practice ${s} — practice it deliberately. Isolate one weak area, repeat it slowly and with full attention, then gradually build speed. Quality reps beat quantity every time.`}),
+  (s,d)=>({t:`Find a ${s} community`,b:`Join a Reddit community, Discord, or local club focused on ${s}. Surrounding yourself with others at different levels accelerates learning and keeps motivation high.`}),
+  (s,d)=>({t:`Teach what you've learned`,b:`Explain what you know about ${s} to someone else — or write it down. The "protégé effect" shows that teaching forces you to fill gaps in your own understanding.`}),
+  (s,d)=>({t:`Rest is part of the process`,b:`Skill acquisition in ${s} happens during recovery, not just practice. Make sure you're getting enough sleep and scheduling rest days. Your brain consolidates learning while you rest.`}),
+  (s,d)=>({t:`Study the best in ${s}`,b:`Find footage, books, or interviews from world-class practitioners of ${s}. Analyze what they do differently. Modeling excellence is a fast track to improvement.`}),
+  (s,d)=>({t:`Set a micro-goal today`,b:`Instead of vague practice, give yourself one specific, measurable goal for today's ${s} session. Specific goals create focus and make progress visible.`}),
+  (s,d)=>({t:`Embrace productive struggle`,b:`The uncomfortable feeling of being challenged is where growth happens in ${s}. If every session feels easy, you're not pushing your edge. Seek difficulty — that's the signal you're improving.`}),
+  (s,d)=>({t:`Cross-train a related skill`,b:`Many skills that support ${s} can be trained separately. Identify one complementary skill and spend 10 minutes on it today. Cross-training builds a more complete and adaptive practitioner.`}),
+  (s,d)=>({t:`Review your last session`,b:`Before practicing ${s} today, spend 5 minutes mentally reviewing your last session. What felt good? What was frustrating? Intentional reflection accelerates progress faster than just showing up.`}),
+  (s,d)=>({t:`Break it down into micro-skills`,b:`${s} isn't one skill — it's dozens. List the sub-skills involved and rate yourself 1–10 on each. Your lowest-rated sub-skill is your highest-leverage area to improve.`}),
+  (s,d)=>({t:`Use spaced repetition`,b:`Instead of cramming practice into one long session, spread it across shorter, more frequent sessions. Spaced repetition is the most evidence-backed method for retaining skills long-term.`}),
+  (s,d)=>({t:`Visualize perfect execution`,b:`Spend 5 minutes visualizing yourself performing ${s} flawlessly. Mental rehearsal activates the same neural pathways as physical practice and is used by elite performers worldwide.`}),
+  (s,d)=>({t:`Get feedback from an expert`,b:`A few minutes with someone more advanced at ${s} can save you weeks of bad habits. Seek honest critique — not just encouragement — and act on one specific note.`}),
+  (s,d)=>({t:`Track your progress in writing`,b:`Keep a practice journal for ${s}. Log what you did, what worked, and what to focus on next time. Written reflection compounds over weeks into a clear picture of your growth.`}),
+  (s,d)=>({t:`Slow down to speed up`,b:`If something in ${s} feels inconsistent, slow it down to the point where you can execute it perfectly every time. Then gradually increase speed. Rushing locks in mistakes.`}),
+  (s,d)=>({t:`Build a consistent routine`,b:`Consistency beats intensity for ${s}. Fifteen focused minutes daily beats two hours on weekends. Design a small, sustainable daily ritual around your practice and protect it.`}),
+  (s,d)=>({t:`Identify your biggest bottleneck`,b:`There's one thing holding your ${s} back more than anything else. Identify it honestly today and dedicate your next three sessions exclusively to breaking through it.`}),
+  (s,d)=>({t:`Play at the edge of your ability`,b:`Find the difficulty level in ${s} where you succeed about 70–80% of the time. That sweet spot maximizes engagement and growth. Too easy breeds complacency; too hard breeds frustration.`}),
+  (s,d)=>({t:`Compete or perform`,b:`Sign up for a low-stakes competition or perform ${s} in front of others. Nothing reveals gaps faster than real stakes. It also sharpens focus and makes practice feel meaningful.`}),
+  (s,d)=>({t:`Revisit the fundamentals`,b:`No matter how advanced you get at ${s}, the fundamentals never stop mattering. Dedicate today's session entirely to basics. You'll almost always find something subtle to improve.`}),
+  (s,d)=>({t:`Use the 2-minute rule to show up`,b:`On days you don't feel like practicing ${s}, commit to just 2 minutes. Often you'll keep going — but even if you don't, the habit of showing up is preserved and that matters more than any single session.`}),
+  (s,d)=>({t:`Study your mistakes, not your wins`,b:`Your errors in ${s} are your most valuable data. After each session, replay your biggest mistake in detail. Understanding why it happened is the fastest path to not repeating it.`}),
+  (s,d)=>({t:`Add variety to your practice`,b:`If your ${s} practice has become routine, deliberately vary it. Change the order, the context, the difficulty, or the format. Variability prevents stagnation and forces adaptive learning.`}),
+  (s,d)=>({t:`Rest, recover and return stronger`,b:`Today, give yourself permission to rest completely from ${s}. Recovery is not laziness — it is part of the training. Return tomorrow with fresh energy and a clear mind.`}),
+  (s,d)=>({t:`Find your "why" for ${s}`,b:`Reconnect with your original motivation for learning ${s}. Write it down in one sentence. When practice gets hard, a clear "why" is more powerful than any technique or tip.`}),
+  (s,d)=>({t:`Build a feedback loop`,b:`Set up a system to measure your ${s} progress weekly. This could be timed drills, recordings, or scores. What gets measured gets improved — and visible progress is the best motivator.`}),
+  (s,d)=>({t:`Final push — mastery is close`,b:`You've built a real foundation in ${s}. Today, identify the single most impactful thing you've learned in this journey and practice it one more time with full intention. You've earned this.`}),
+];
+
+function getTip(day){
+  const idx = (day-1) % TIP_TEMPLATES.length;
+  const res = TIP_TEMPLATES[idx](ST.skill.n, ST.skill.d);
+  return {title:res.t, body:res.b, date:tod(), day};
+}
+
+async function fetchTip(refresh=false){
+  const today = tod();
+  if(!refresh && ST.tips.length>0 && ST.tips[ST.tips.length-1].date===today){ renderToday(); return; }
+  const dayNum = refresh ? ST.dayCount : ST.dayCount+1;
+  let tip;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:400,
+        system:'You are a world-class skill coach. Respond ONLY with valid JSON, no markdown: {"title":"punchy tip title under 9 words","body":"2-3 sentence specific actionable tip"}',
+        messages:[{role:'user',content:`Day ${dayNum} tip for improving at: ${ST.skill.n} (${ST.skill.d}). Previous tip titles: ${ST.tips.slice(-3).map(t=>t.title).join(' | ')||'none'}`}]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+    tip = {...JSON.parse(raw), date:today, day:dayNum};
+  } catch(e){
+    tip = getTip(dayNum);
+  }
+  if(!refresh){ ST.dayCount++; ST.tips.push(tip); }
+  else { ST.tips[ST.tips.length-1]={...ST.tips[ST.tips.length-1],...tip}; }
+  ST.lastVisit=today;
+  await saveST();
+  renderToday();
+}
+
+function renderToday(){
+  const el=document.getElementById('v-today');
+  if(!ST.skill){
+    el.innerHTML=`<div class="empty" style="padding-top:60px"><div class="empty-ico">🔭</div><p style="font-size:15px">No skill selected yet.<br>Head to <strong>Explore</strong> to choose one!</p><br><button class="btn btn-p" onclick="go('explore')">Browse Skills →</button></div>`;
+    return;
+  }
+  const today=tod();
+  const dayLabels=['S','M','T','W','T','F','S'];
+  const dow=new Date().getDay();
+  const dotHTML=dayLabels.map((d,i)=>{
+    if(i<dow) return `<div class="dot ok">${d}</div>`;
+    if(i===dow) return `<div class="dot now">${d}</div>`;
+    return `<div class="dot no">${d}</div>`;
+  }).join('');
+  const prog=Math.min(100,Math.round((ST.dayCount/30)*100));
+  const lt=ST.tips[ST.tips.length-1];
+  const tipHTML = lt ? `<div class="tip-box fi">
+    <div class="tip-lbl">Day ${ST.dayCount} · Today's Tip</div>
+    <div class="tip-h">${lt.title}</div>
+    <div class="tip-b">${lt.body}</div>
+    ${ST.todayDone
+      ? `<div class="done-note"><i class="ti ti-check"></i> Done for today! See you tomorrow. 🔥</div>`
+      : `<div class="tip-acts">
+          <button class="btn btn-p" onclick="markDone()">✓ Mark done</button>
+          <button class="btn btn-g" onclick="fetchTip(true)">↻ New tip</button>
+        </div>`}
+  </div>` : `<div class="spin-wrap"><div class="spin"></div> Loading your tip…</div>`;
+
+  const masteryCTA = ST.dayCount>=30 ? `<div class="mastery-cta fi">
+    <h3>🏆 You've mastered ${ST.skill.n}!</h3>
+    <p>30 days of consistent practice complete. Claim your badge and prestige to start a new skill.</p>
+    <button class="btn btn-p" onclick="claimMastery()">Claim Mastery Badge 🏅</button>
+  </div>` : '';
+
+  el.innerHTML=`
+    <div class="streak-row fi">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="sf">🔥</span>
+        <div><div class="sn">${ST.streak}</div><div class="sl">day streak</div></div>
+      </div>
+      <div class="dots">${dotHTML}</div>
+    </div>
+    <div class="sbanner fi">
+      <div class="smeta"><span class="si2">${ST.skill.i}</span><div><div class="sname">${ST.skill.n}</div><div class="ssub">${ST.skill.d}</div></div></div>
+      <div class="pbar-wrap">
+        <div class="pbar-top"><span>Progress to mastery</span><span>${ST.dayCount}/30 days</span></div>
+        <div class="pbar"><div class="pfill" style="width:${prog}%"></div></div>
+      </div>
+    </div>
+    ${tipHTML}
+    ${masteryCTA}
+    <button class="btn btn-d" style="margin-top:8px;font-size:12px" onclick="switchSkill()">↩ Switch skill</button>`;
+
+  if(!lt) fetchTip();
+}
+
+function markDone(){
+  const today=tod();
+  if(ST.todayDone){ toast('Already done today!'); return; }
+  ST.todayDone=true;
+  const diff=ST.lastVisit?Math.floor((new Date(today)-new Date(ST.lastVisit))/86400000):1;
+  if(diff<=1) ST.streak++;
+  else ST.streak=1;
+  ST.lastVisit=today;
+  saveST(); renderToday(); toast('🔥 Streak extended! Keep it up!');
+}
+
+function switchSkill(){
+  if(confirm(`Switch away from "${ST.skill.n}"?\nProgress will reset.`)){
+    ST.skill=null; ST.tips=[]; ST.dayCount=0; ST.todayDone=false; ST.streak=0;
+    saveST(); renderAll(); go('explore');
+  }
+}
+
+async function claimMastery(){
+  const b={id:Date.now(),name:`${ST.skill.n} Master`,icon:ST.skill.i,desc:`30 days of ${ST.skill.n}`,date:new Date().toLocaleDateString()};
+  ST.badges.push(b); ST.history.push({...ST.skill,completedDate:b.date});
+  ST.prestige++; ST.skill=null; ST.tips=[]; ST.dayCount=0; ST.todayDone=false;
+  await saveST(); toast(`🏆 Badge earned: ${b.name}!`); renderAll(); go('profile');
+}
+
+function renderProfile(){
+  const el=document.getElementById('v-profile');
+  const since=ST.joinDate?new Date(ST.joinDate).toLocaleDateString('en-US',{month:'long',year:'numeric'}):'Today';
+  const slots=Math.max(6,ST.badges.length+2);
+  const badgeHTML=[...ST.badges,...Array(slots-ST.badges.length).fill(null)].map(b=>
+    b?`<div class="bitem fi"><div class="bico">${b.icon}</div><div class="bname">${b.name}</div><div class="bsub">${b.date}</div></div>`
+    :`<div class="bitem lk"><div class="bico">🔒</div><div class="bname">Locked</div><div class="bsub">Master a skill</div></div>`
+  ).join('');
+  el.innerHTML=`
+    <div class="prof-head fi">
+      <div class="av">${ST.prestige>0?'⭐':'🎓'}</div>
+      <div class="pname">Skillsmith</div>
+      <div class="psince">Member since ${since}</div>
+      ${ST.prestige>0?`<div class="pbadge"><i class="ti ti-star"></i> Prestige ${ST.prestige}</div>`:''}
+    </div>
+    <div class="stats3">
+      <div class="sbox"><div class="sv">${ST.streak}</div><div class="slb">Streak</div></div>
+      <div class="sbox"><div class="sv">${ST.badges.length}</div><div class="slb">Badges</div></div>
+      <div class="sbox"><div class="sv">${ST.prestige}</div><div class="slb">Prestige</div></div>
+    </div>
+    <div class="sec-lbl">Mastery Badges</div>
+    <div class="badge-grid">${badgeHTML}</div>
+    ${ST.history.length?`<div class="sec-lbl">Hall of Fame</div>${ST.history.map(s=>`<div class="sbanner" style="margin-bottom:8px;padding:12px 16px"><div class="smeta"><span>${s.i}</span><div><div class="sname" style="font-size:15px">${s.n}</div><div class="ssub">Mastered · ${s.completedDate}</div></div></div></div>`).join('')}`:''}`;
+}
+
+function renderAll(){ renderToday(); renderProfile(); }
+
+function go(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  const idx={today:0,explore:1,profile:2}[v];
+  document.querySelectorAll('.tab')[idx].classList.add('on');
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2800);
+}
+
+loadST();
+</script>
+</body>
+</html>
